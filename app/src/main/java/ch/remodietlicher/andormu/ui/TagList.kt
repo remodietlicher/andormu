@@ -3,10 +3,12 @@ package ch.remodietlicher.andormu.ui
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ch.remodietlicher.andormu.model.TaggedTimerViewModel
 
 @Preview
 @Composable
@@ -23,5 +25,26 @@ fun TagList(tags: List<String>) {
 
 @Composable
 fun TagItem(tag: String) {
-    Button(onClick = { /*TODO*/}) { Text(text = tag) }
+    var isLoading by remember { mutableStateOf(false) }
+    var isActive by remember { mutableStateOf(false) }
+    val viewModel = remember { TaggedTimerViewModel() }
+
+    LaunchedEffect(isLoading) {
+        if (isLoading) {
+            isActive = viewModel.toggleTimer(tag)
+            isLoading = false
+        }
+    }
+
+    Button(
+        onClick = { isLoading = true },
+        colors =
+            ButtonDefaults.buttonColors(
+                backgroundColor =
+                    if (isActive) androidx.compose.ui.graphics.Color.Red
+                    else androidx.compose.ui.graphics.Color.Green
+            )
+    ) {
+        Text(text = tag)
+    }
 }

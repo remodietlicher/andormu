@@ -9,6 +9,7 @@ import ch.remodietlicher.andormu.ui.theme.AndormuTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        TimerRepository.initialize(this)
         setContent { AndormuTheme { TimelineScreen() } }
     }
 }
