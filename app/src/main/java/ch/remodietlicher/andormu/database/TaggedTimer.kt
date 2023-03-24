@@ -13,5 +13,5 @@ data class TaggedTimer(
     @PrimaryKey val id: UUID,
     val startTime: Date,
     val endTime: Date?,
-    val tags: List<String>
+    val tag: String
 )

@@ -141,7 +141,7 @@ fun ActiveTimers(scale: Scale) {
                         Modifier.absoluteOffset(x = x, y = index * height).size(width, height)
                 ) {
                     Text(
-                        text = taggedTimer.tags.toString(),
+                        text = taggedTimer.tag,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )

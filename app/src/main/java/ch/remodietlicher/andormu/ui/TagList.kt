@@ -18,18 +18,20 @@ fun TagListPreview() {
 
 @Composable
 fun TagList(tags: List<String>) {
+    val viewModel = remember { TaggedTimerViewModel() }
+    val activeTimerTags: List<String> by viewModel.activeTimerTags.collectAsState(emptyList())
+
     LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 128.dp)) {
-        items(tags.size) { TagItem(tags[it]) }
+        items(tags.size) { TagItem(tags[it], tags[it] in activeTimerTags) }
     }
 }
 
 @Composable
-fun TagItem(tag: String) {
-    var isActive by remember { mutableStateOf(false) }
+fun TagItem(tag: String, isActive: Boolean = false) {
     val viewModel = remember { TaggedTimerViewModel() }
 
     Button(
-        onClick = { isActive = viewModel.toggleTimer(tag) },
+        onClick = { viewModel.toggleTimer(tag) },
         colors =
             ButtonDefaults.buttonColors(
                 backgroundColor =

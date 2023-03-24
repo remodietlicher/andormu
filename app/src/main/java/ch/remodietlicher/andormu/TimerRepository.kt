@@ -11,6 +11,7 @@ private const val DATABASE_NAME = "timer-database"
 class TimerRepository private constructor(context: Context) {
     private val database =
         Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
+            .fallbackToDestructiveMigration()
             .build()
 
     fun getTimersAfterDate(date: Date) = database.timerDao().getTimersAfterDate(date)

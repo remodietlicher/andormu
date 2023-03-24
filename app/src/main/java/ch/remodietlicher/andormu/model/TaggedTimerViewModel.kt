@@ -15,6 +15,10 @@ class TaggedTimerViewModel : ViewModel() {
     val timers: StateFlow<List<TaggedTimer>>
         get() = _timers.asStateFlow()
 
+    val activeTimerTags: Flow<List<String>>
+        get() =
+            _timers.map { timers -> timers.filter { it.endTime == null }.map { it.tag }.distinct() }
+
     init {
         viewModelScope.launch {
             timerRepository.getTimersAfterDate(getBeginningOfDay()).collect { _timers.value = it }
@@ -22,12 +26,11 @@ class TaggedTimerViewModel : ViewModel() {
     }
 
     fun toggleTimer(tag: String): Boolean {
-        val mostRecentTimer =
-            _timers.value.filter { it.tags.contains(tag) }.maxByOrNull { it.startTime }
+        val mostRecentTimer = _timers.value.filter { it.tag == tag }.maxByOrNull { it.startTime }
 
         val timerIsActive =
             if (mostRecentTimer == null || mostRecentTimer.endTime != null) {
-                val newTimer = TaggedTimer(UUID.randomUUID(), Date(), null, listOf(tag))
+                val newTimer = TaggedTimer(UUID.randomUUID(), Date(), null, tag)
                 viewModelScope.launch { timerRepository.insertTimer(newTimer) }
                 _timers.update { it + newTimer }
                 true
