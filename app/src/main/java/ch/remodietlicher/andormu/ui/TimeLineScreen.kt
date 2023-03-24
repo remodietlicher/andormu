@@ -1,7 +1,6 @@
 package ch.remodietlicher.andormu.ui
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
 import androidx.compose.material.FloatingActionButton
@@ -12,7 +11,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import ch.remodietlicher.andormu.R
 import ch.remodietlicher.andormu.model.TaggedTimerViewModel
-import kotlinx.coroutines.flow.collect
 
 private const val TAG = "TimelineScreen"
 
@@ -20,22 +18,14 @@ private const val TAG = "TimelineScreen"
 @Preview
 @Composable
 fun TimelineScreen() {
-    var isDeleting by remember { mutableStateOf(false) }
+    var deletingTimers by remember { mutableStateOf(false) }
     var loadingTimers by remember { mutableStateOf(false) }
     val viewModel = remember { TaggedTimerViewModel() }
 
-    LaunchedEffect(isDeleting) {
-        if (isDeleting) {
+    LaunchedEffect(deletingTimers) {
+        if (deletingTimers) {
             viewModel.deleteAllTimers()
-            isDeleting = false
-        }
-    }
-
-    LaunchedEffect(loadingTimers) {
-        if (loadingTimers) {
-            val timers = viewModel.getAllTimers().collect()
-            Log.d(TAG, timers.toString())
-            loadingTimers = false
+            deletingTimers = false
         }
     }
 
@@ -43,9 +33,9 @@ fun TimelineScreen() {
         topBar = { Text(text = stringResource(id = R.string.app_name)) },
         content = {
             Column {
-                ActiveTimers()
+                ActiveTimers(Scale.HOUR)
                 TagList(listOf("Tag1", "Tag2", "Tag3", "Tag4", "Tag5", "Tag6", "Tag7"))
-                Button(onClick = { isDeleting = true }) {
+                Button(onClick = { deletingTimers = true }) {
                     Text(text = stringResource(id = R.string.delete_all))
                 }
                 Button(onClick = { loadingTimers = true }) {

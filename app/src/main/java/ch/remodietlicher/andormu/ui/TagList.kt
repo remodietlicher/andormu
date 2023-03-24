@@ -25,19 +25,11 @@ fun TagList(tags: List<String>) {
 
 @Composable
 fun TagItem(tag: String) {
-    var isLoading by remember { mutableStateOf(false) }
     var isActive by remember { mutableStateOf(false) }
     val viewModel = remember { TaggedTimerViewModel() }
 
-    LaunchedEffect(isLoading) {
-        if (isLoading) {
-            isActive = viewModel.toggleTimer(tag)
-            isLoading = false
-        }
-    }
-
     Button(
-        onClick = { isLoading = true },
+        onClick = { isActive = viewModel.toggleTimer(tag) },
         colors =
             ButtonDefaults.buttonColors(
                 backgroundColor =
