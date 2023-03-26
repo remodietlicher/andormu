@@ -3,14 +3,21 @@ package ch.remodietlicher.andormu.model
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.remodietlicher.andormu.TimerRepository
-import ch.remodietlicher.andormu.database.TaggedTimer
+import ch.remodietlicher.andormu.data.TaggedTimer
+import ch.remodietlicher.andormu.data.UserPreferenceRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
+import javax.inject.Inject
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class TaggedTimerViewModel : ViewModel() {
-    private val timerRepository = TimerRepository.get()
-
+@HiltViewModel
+class TaggedTimerViewModel
+@Inject
+constructor(
+    private val timerRepository: TimerRepository,
+    private val userPreferencesRepository: UserPreferenceRepository
+) : ViewModel() {
     private var _timers: MutableStateFlow<List<TaggedTimer>> = MutableStateFlow(emptyList())
     val timers: StateFlow<List<TaggedTimer>>
         get() = _timers.asStateFlow()

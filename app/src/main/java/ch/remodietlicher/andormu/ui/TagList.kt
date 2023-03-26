@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import ch.remodietlicher.andormu.model.TaggedTimerViewModel
 
 @Preview
@@ -18,7 +19,7 @@ fun TagListPreview() {
 
 @Composable
 fun TagList(tags: List<String>) {
-    val viewModel = remember { TaggedTimerViewModel() }
+    val viewModel: TaggedTimerViewModel = hiltViewModel()
     val activeTimerTags: List<String> by viewModel.activeTimerTags.collectAsState(emptyList())
 
     LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 128.dp)) {
@@ -28,7 +29,7 @@ fun TagList(tags: List<String>) {
 
 @Composable
 fun TagItem(tag: String, isActive: Boolean = false) {
-    val viewModel = remember { TaggedTimerViewModel() }
+    val viewModel: TaggedTimerViewModel = hiltViewModel()
 
     Button(
         onClick = { viewModel.toggleTimer(tag) },

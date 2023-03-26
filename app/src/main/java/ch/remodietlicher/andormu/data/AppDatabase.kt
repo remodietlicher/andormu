@@ -1,4 +1,4 @@
-package ch.remodietlicher.andormu.database
+package ch.remodietlicher.andormu.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

@@ -17,13 +17,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
-import ch.remodietlicher.andormu.database.TaggedTimer
+import androidx.hilt.navigation.compose.hiltViewModel
+import ch.remodietlicher.andormu.data.TaggedTimer
 import ch.remodietlicher.andormu.model.TaggedTimerViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
 import java.lang.Long.max
 import java.lang.Long.min
 import java.util.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 
 private const val TAG = "TimelineScreen"
 
@@ -44,7 +45,8 @@ fun ActiveTimers(scale: Scale) {
     val scrollStateY = rememberScrollState()
     var currentTime by remember { mutableStateOf(Date().time) }
 
-    val viewModel = remember { TaggedTimerViewModel() }
+    val viewModel: TaggedTimerViewModel = hiltViewModel()
+
     val timers: List<TaggedTimer> by viewModel.timers.collectAsState()
 
     LaunchedEffect(true) {
@@ -140,11 +142,7 @@ fun ActiveTimers(scale: Scale) {
                     modifier =
                         Modifier.absoluteOffset(x = x, y = index * height).size(width, height)
                 ) {
-                    Text(
-                        text = taggedTimer.tag,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Text(text = taggedTimer.tag, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
             }
         }

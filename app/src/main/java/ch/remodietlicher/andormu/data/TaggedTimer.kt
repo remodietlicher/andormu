@@ -1,8 +1,7 @@
-package ch.remodietlicher.andormu.database
+package ch.remodietlicher.andormu.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.RoomMasterTable.TABLE_NAME
 import java.util.Date
 import java.util.UUID
 
