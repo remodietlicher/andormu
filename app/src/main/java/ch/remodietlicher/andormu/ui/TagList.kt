@@ -14,16 +14,18 @@ import ch.remodietlicher.andormu.model.TaggedTimerViewModel
 @Preview
 @Composable
 fun TagListPreview() {
-    TagList(listOf("Tag1", "Tag2", "Tag3", "Tag4", "Tag5", "Tag6", "Tag7"))
+    TagList(setOf("Programming", "Reading", "Sleeping"))
 }
 
 @Composable
-fun TagList(tags: List<String>) {
+fun TagList(tags: Set<String>) {
     val viewModel: TaggedTimerViewModel = hiltViewModel()
     val activeTimerTags: List<String> by viewModel.activeTimerTags.collectAsState(emptyList())
 
+    val tagsList = tags.toList()
+
     LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 128.dp)) {
-        items(tags.size) { TagItem(tags[it], tags[it] in activeTimerTags) }
+        items(tags.size) { TagItem(tagsList[it], activeTimerTags.contains(tagsList[it])) }
     }
 }
 

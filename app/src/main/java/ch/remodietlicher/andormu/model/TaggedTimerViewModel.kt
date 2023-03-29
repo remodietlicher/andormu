@@ -55,6 +55,12 @@ constructor(
 
     suspend fun deleteAllTimers() = timerRepository.deleteAllTimers()
 
+    suspend fun addTag(tag: String) = userPreferencesRepository.addTag(tag)
+
+    suspend fun removeTag(tag: String) = userPreferencesRepository.removeTag(tag)
+
+    val listOfTags: Flow<Set<String>> = userPreferencesRepository.userPreferencesFlow.map { it.listOfTags }
+
     fun getBeginningOfDay(): Date {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, 0)

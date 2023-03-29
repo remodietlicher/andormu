@@ -96,7 +96,7 @@ fun ActiveTimers(scale: Scale) {
     Box(
         modifier =
             Modifier.fillMaxWidth()
-                .height(500.dp)
+                .height(200.dp)
                 .clip(RectangleShape)
                 .verticalScroll(scrollStateX)
                 .horizontalScroll(scrollStateY)

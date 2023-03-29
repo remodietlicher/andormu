@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">andormu</string>
-    <string name="some_button">ProjectX</string>
     <string name="delete_all">Delete Table</string>
+    <string name="add">add</string>
+    <string name="cancel">cancel</string>
+    <string name="tag_entry_label">Enter A New Tag</string>
+    <string name="add_tag_dialog_title">Add Tag</string>
+    <string name="delete_all_tags">Delete All Tags</string>
 </resources>
