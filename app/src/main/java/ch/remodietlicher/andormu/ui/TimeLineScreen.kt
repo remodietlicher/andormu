@@ -67,7 +67,8 @@ fun TimelineScreen() {
         topBar = { Text(text = stringResource(id = R.string.app_name)) },
         content = {
             Column {
-                ActiveTimers(Scale.HOUR)
+//                ActiveTimers(Scale.HOUR)
+                Timeline()
                 TagList(listOfTags)
                 Button(onClick = { deletingTimers = true }) {
                     Text(text = stringResource(id = R.string.delete_all))
