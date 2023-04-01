@@ -47,10 +47,13 @@ fun Timeline() {
 
     val pxPerMs = screenWidthPx * scale / DEFAULT_NO_OF_MS
     val msPerPx = 1 / pxPerMs
-    val pxPerHour = pxPerMs * 1000 * 60 * 60
+    val msPerHour = 1000 * 60 * 60
 
-    val timeScreen = msPerPx * screenWidthPx
-    val timeLeft = currentTime - msPerPx * (offsetX + DEFAULT_NOW_PERCENTAGE * screenWidthPx)
+    val pxToTime = { px: Int -> (px * msPerPx).toLong() }
+
+    val timeScreen = pxToTime(screenWidthPx)
+    val timeLeft =
+        currentTime - pxToTime((offsetX + DEFAULT_NOW_PERCENTAGE * screenWidthPx).toInt())
     val timeRight = timeLeft + timeScreen
 
     val timeToPx = { time: Long -> (time - timeLeft) * pxPerMs }
@@ -59,7 +62,7 @@ fun Timeline() {
         modifier =
             Modifier.fillMaxWidth().height(200.dp).transformable(state = state).drawBehind {
                 // first full hour
-                val timeFirstHour = (timeLeft + 1000 * 60 * 60 - timeLeft % (1000 * 60 * 60))
+                val timeFirstHour = (timeLeft + msPerHour - timeLeft % msPerHour)
 
                 var t = timeFirstHour
 
@@ -75,14 +78,15 @@ fun Timeline() {
                     // text with time below each line in HH:MM format
                     val calendar = Calendar.getInstance().apply { timeInMillis = t.toLong() }
                     val timeString =
-                        "${calendar.get(Calendar.HOUR)}:${calendar.get(Calendar.MINUTE)}"
+                        "${calendar.get(Calendar.HOUR)}:${String.format("%02d", calendar.get(Calendar.MINUTE))}"
 
                     drawIntoCanvas {
-                        val paint = Paint().apply {
-                            color = Color.White.toArgb()
-                            textSize = 12.sp.toPx()
-                            textAlign = Paint.Align.CENTER
-                        }
+                        val paint =
+                            Paint().apply {
+                                color = Color.White.toArgb()
+                                textSize = 12.sp.toPx()
+                                textAlign = Paint.Align.CENTER
+                            }
                         it.nativeCanvas.drawText(
                             timeString,
                             timeToPx(t.toLong()),
@@ -91,7 +95,7 @@ fun Timeline() {
                         )
                     }
 
-                    t += 1000 * 60 * 60
+                    t += msPerHour
                 }
                 // draw red line at now
                 drawLine(
