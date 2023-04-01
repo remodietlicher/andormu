@@ -107,15 +107,6 @@ fun Timeline() {
             }
     ) {
         // horizontal layout
-        Column {
-            Text(text = "OffsetX: $offsetX")
-            Text(text = "Scale: $scale")
-            Text(text = "Time left: $timeLeft")
-            Text(text = "PxPerMs: $pxPerMs")
-            Text(
-                text = "Time first hour: ${timeLeft + 1000 * 60 * 60 - timeLeft % (1000 * 60 * 60)}"
-            )
-        }
         timers.forEachIndexed { index, taggedTimer ->
             val startTime = taggedTimer.startTime.time
             val endTime = taggedTimer.endTime?.time ?: currentTime
