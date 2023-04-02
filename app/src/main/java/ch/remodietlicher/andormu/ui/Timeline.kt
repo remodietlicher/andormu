@@ -2,6 +2,7 @@ package ch.remodietlicher.andormu.ui
 
 import android.content.res.Resources
 import android.graphics.Paint
+import android.util.TypedValue
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -24,6 +25,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ch.remodietlicher.andormu.data.TaggedTimer
 import ch.remodietlicher.andormu.model.TaggedTimerViewModel
 import java.util.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 
 private const val DEFAULT_NO_OF_HOURS = 5
 private const val DEFAULT_NO_OF_MS = 1000 * 60 * 60 * DEFAULT_NO_OF_HOURS
@@ -41,7 +44,17 @@ fun Timeline() {
     }
     val viewModel: TaggedTimerViewModel = hiltViewModel()
     val timers: List<TaggedTimer> by viewModel.timers.collectAsState()
-    val currentTime by remember { mutableStateOf(Date().time) }
+    var currentTime by remember { mutableStateOf(Date().time) }
+
+    LaunchedEffect(true) {
+        flow {
+                while (true) {
+                    emit(Date().time)
+                    delay(1000)
+                }
+            }
+            .collect { currentTime = it }
+    }
 
     val screenWidthPx = Resources.getSystem().displayMetrics.widthPixels
 
@@ -71,8 +84,8 @@ fun Timeline() {
                 while (t < timeRight) {
                     drawLine(
                         color = Color.White,
-                        start = Offset(x = timeToPx(t.toLong()), y = 0f),
-                        end = Offset(x = timeToPx(t.toLong()), y = lineHeight),
+                        start = Offset(x = timeToPx(t), y = 0f),
+                        end = Offset(x = timeToPx(t), y = lineHeight),
                         strokeWidth = 2f
                     )
                     // text with time below each line in HH:MM format
@@ -89,7 +102,7 @@ fun Timeline() {
                             }
                         it.nativeCanvas.drawText(
                             timeString,
-                            timeToPx(t.toLong()),
+                            timeToPx(t),
                             lineHeight + 20.dp.toPx(),
                             paint,
                         )
@@ -97,7 +110,6 @@ fun Timeline() {
 
                     t += msPerHour
                 }
-                // draw red line at now
                 drawLine(
                     color = Color.Red,
                     start = Offset(x = timeToPx(currentTime), y = 0f),
@@ -116,14 +128,16 @@ fun Timeline() {
 
             val height = 50.dp
 
-            // draw a button for each timer
-            Button(
-                onClick = { /*TODO*/},
-                modifier =
-                    Modifier.absoluteOffset(x = startX.dp, y = index * height)
-                        .size(width.dp, height)
-            ) {
-                Text(text = taggedTimer.tag, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            // draw a button for each timer if within screen
+            if (startTime < timeRight || endTime > timeLeft) {
+                Button(
+                    onClick = { /*TODO*/},
+                    modifier =
+                        Modifier.absoluteOffset(x = pxToDp(startX), y = index * height)
+                            .size(width.dp, height)
+                ) {
+                    Text(text = taggedTimer.tag, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
             }
         }
     }
